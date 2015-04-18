@@ -24,6 +24,8 @@ module.exports = function(grunt) {
         options: {
           paths: 'less',
           sourceMap: true,
+          sourceMapBasepath: 'less',
+          sourceMapRootpath: '/',
           optimization: 1
         },
         files: {
@@ -163,6 +165,12 @@ module.exports = function(grunt) {
         dest: 'build',
         expand: true
       },
+      images: {
+        expand: true,                 // Enable dynamic expansion
+        cwd: './images/',             // Src matches are relative to this path
+        src: ['**/*.{png,jpg,gif}'],  // Actual patterns to match
+        dest: './dist/img/'           // Destination path prefix
+      }
     },
 
     watch: {
@@ -175,8 +183,8 @@ module.exports = function(grunt) {
         tasks: [ 'build' ]
       },
       images: {
-        files: [ 'images/*.png','images/*.jpg','images/*.jpeg','images/*.gif','images/*.svg'],
-        tasks: [ 'imagemin' ]
+        files: [ 'images/**/*'],
+        tasks: [ 'copy:images' ]
       }
     }
  
@@ -198,13 +206,15 @@ module.exports = function(grunt) {
   grunt.registerTask(
     'build',
     'Creates a development version of the files',
-    ['clean', 'css', 'buildScripts', 'imagemin:development']
+    ['clean', 'css', 'buildScripts', 'copy:images']
+    // ['clean', 'css', 'buildScripts', 'imagemin:development']
   );
 
   grunt.registerTask(
     'deploy',
     'Creates a production version of the files',
-    ['clean', 'less:production', 'autoprefixer', 'cssmin', 'deployScripts', 'imagemin:production']
+    ['clean', 'less:production', 'autoprefixer', 'cssmin', 'deployScripts']
+    // ['clean', 'less:production', 'autoprefixer', 'cssmin', 'deployScripts', 'imagemin:production']
   );
 
   grunt.registerTask(
