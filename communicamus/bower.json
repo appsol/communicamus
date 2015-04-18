@@ -1,0 +1,21 @@
+{
+  "name": "communicamus",
+  "version": "0.1.0",
+  "description": "Communicamus Wordpress Template Bower package file. This file is not intended to be used within the Communicamus template. Instead, copy this file into any child themes and run 'bower install' there",
+  "authors": [
+    "Stuart Laverick <stuart@appropriatesolutions.co.uk>"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap"     : "~3.3.0",
+    "fontawesome"   : "~4.3.0",
+    "modernizr"     : "~2.8.3"
+  }
+}
