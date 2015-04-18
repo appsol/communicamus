@@ -26,7 +26,7 @@
 
 <body <?php body_class(); ?>>
 <div id="page" class="hfeed site">
-	<a class="skip-link screen-reader-text" href="#content"><?php _e( 'Skip to content', '_s' ); ?></a>
+	<a class="skip-link screen-reader-text" href="#content"><?php _e( 'Skip to content', 'communicamus' ); ?></a>
 
 	<header id="masthead" class="site-header" role="banner">
 <?php if (is_active_sidebar('header-top')): ?>
