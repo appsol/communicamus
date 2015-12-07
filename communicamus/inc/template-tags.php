@@ -4,7 +4,7 @@
  *
  * Eventually, some of the functionality here could be replaced by core features.
  *
- * @package _s
+ * @package communicamus
  */
 
 if ( ! function_exists( 'the_posts_navigation' ) ) :
@@ -20,15 +20,15 @@ function the_posts_navigation() {
 	}
 	?>
 	<nav class="navigation posts-navigation" role="navigation">
-		<h2 class="screen-reader-text"><?php _e( 'Posts navigation', 'communicamus' ); ?></h2>
+		<h2 class="screen-reader-text"><?php esc_html_e( 'Posts navigation', 'communicamus' ); ?></h2>
 		<div class="nav-links">
 
 			<?php if ( get_next_posts_link() ) : ?>
-			<div class="nav-previous"><?php next_posts_link( __( 'Older posts', 'communicamus' ) ); ?></div>
+			<div class="nav-previous"><?php next_posts_link( esc_html__( 'Older posts', 'communicamus' ) ); ?></div>
 			<?php endif; ?>
 
 			<?php if ( get_previous_posts_link() ) : ?>
-			<div class="nav-next"><?php previous_posts_link( __( 'Newer posts', 'communicamus' ) ); ?></div>
+			<div class="nav-next"><?php previous_posts_link( esc_html__( 'Newer posts', 'communicamus' ) ); ?></div>
 			<?php endif; ?>
 
 		</div><!-- .nav-links -->
@@ -53,7 +53,7 @@ function the_post_navigation() {
 	}
 	?>
 	<nav class="navigation post-navigation" role="navigation">
-		<h2 class="screen-reader-text"><?php _e( 'Post navigation', 'communicamus' ); ?></h2>
+		<h2 class="screen-reader-text"><?php esc_html_e( 'Post navigation', 'communicamus' ); ?></h2>
 		<div class="nav-links">
 			<?php
 				previous_post_link( '<div class="nav-previous">%link</div>', '%title' );
@@ -65,11 +65,11 @@ function the_post_navigation() {
 }
 endif;
 
-if ( ! function_exists( '_s_posted_on' ) ) :
+if ( ! function_exists( 'communicamus_posted_on' ) ) :
 /**
  * Prints HTML with meta information for the current post-date/time and author.
  */
-function _s_posted_on() {
+function communicamus_posted_on() {
 	$time_string = '<time class="entry-date published updated" datetime="%1$s">%2$s</time>';
 	if ( get_the_time( 'U' ) !== get_the_modified_time( 'U' ) ) {
 		$time_string = '<time class="entry-date published" datetime="%1$s">%2$s</time><time class="updated" datetime="%3$s">%4$s</time>';
@@ -83,47 +83,47 @@ function _s_posted_on() {
 	);
 
 	$posted_on = sprintf(
-		_x( 'Posted on %s', 'post date', 'communicamus' ),
+		esc_html_x( 'Posted on %s', 'post date', 'communicamus' ),
 		'<a href="' . esc_url( get_permalink() ) . '" rel="bookmark">' . $time_string . '</a>'
 	);
 
 	$byline = sprintf(
-		_x( 'by %s', 'post author', 'communicamus' ),
+		esc_html_x( 'by %s', 'post author', 'communicamus' ),
 		'<span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a></span>'
 	);
 
-	echo '<span class="posted-on">' . $posted_on . '</span><span class="byline"> ' . $byline . '</span>';
+	echo '<span class="posted-on">' . $posted_on . '</span><span class="byline"> ' . $byline . '</span>'; // WPCS: XSS OK.
 
 }
 endif;
 
-if ( ! function_exists( '_s_entry_footer' ) ) :
+if ( ! function_exists( 'communicamus_entry_footer' ) ) :
 /**
  * Prints HTML with meta information for the categories, tags and comments.
  */
-function _s_entry_footer() {
+function communicamus_entry_footer() {
 	// Hide category and tag text for pages.
 	if ( 'post' == get_post_type() ) {
 		/* translators: used between list items, there is a space after the comma */
-		$categories_list = get_the_category_list( __( ', ', 'communicamus' ) );
-		if ( $categories_list && _s_categorized_blog() ) {
-			printf( '<span class="cat-links">' . __( 'Posted in %1$s', 'communicamus' ) . '</span>', $categories_list );
+		$categories_list = get_the_category_list( esc_html__( ', ', 'communicamus' ) );
+		if ( $categories_list && communicamus_categorized_blog() ) {
+			printf( '<span class="cat-links">' . esc_html__( 'Posted in %1$s', 'communicamus' ) . '</span>', $categories_list ); // WPCS: XSS OK.
 		}
 
 		/* translators: used between list items, there is a space after the comma */
-		$tags_list = get_the_tag_list( '', __( ', ', 'communicamus' ) );
+		$tags_list = get_the_tag_list( '', esc_html__( ', ', 'communicamus' ) );
 		if ( $tags_list ) {
-			printf( '<span class="tags-links">' . __( 'Tagged %1$s', 'communicamus' ) . '</span>', $tags_list );
+			printf( '<span class="tags-links">' . esc_html__( 'Tagged %1$s', 'communicamus' ) . '</span>', $tags_list ); // WPCS: XSS OK.
 		}
 	}
 
 	if ( ! is_single() && ! post_password_required() && ( comments_open() || get_comments_number() ) ) {
 		echo '<span class="comments-link">';
-		comments_popup_link( __( 'Leave a comment', 'communicamus' ), __( '1 Comment', 'communicamus' ), __( '% Comments', 'communicamus' ) );
+		comments_popup_link( esc_html__( 'Leave a comment', 'communicamus' ), esc_html__( '1 Comment', 'communicamus' ), esc_html__( '% Comments', 'communicamus' ) );
 		echo '</span>';
 	}
 
-	edit_post_link( __( 'Edit', 'communicamus' ), '<span class="edit-link">', '</span>' );
+	edit_post_link( esc_html__( 'Edit', 'communicamus' ), '<span class="edit-link">', '</span>' );
 }
 endif;
 
@@ -140,45 +140,45 @@ if ( ! function_exists( 'the_archive_title' ) ) :
  */
 function the_archive_title( $before = '', $after = '' ) {
 	if ( is_category() ) {
-		$title = sprintf( __( 'Category: %s', 'communicamus' ), single_cat_title( '', false ) );
+		$title = sprintf( esc_html__( 'Category: %s', 'communicamus' ), single_cat_title( '', false ) );
 	} elseif ( is_tag() ) {
-		$title = sprintf( __( 'Tag: %s', 'communicamus' ), single_tag_title( '', false ) );
+		$title = sprintf( esc_html__( 'Tag: %s', 'communicamus' ), single_tag_title( '', false ) );
 	} elseif ( is_author() ) {
-		$title = sprintf( __( 'Author: %s', 'communicamus' ), '<span class="vcard">' . get_the_author() . '</span>' );
+		$title = sprintf( esc_html__( 'Author: %s', 'communicamus' ), '<span class="vcard">' . get_the_author() . '</span>' );
 	} elseif ( is_year() ) {
-		$title = sprintf( __( 'Year: %s', 'communicamus' ), get_the_date( _x( 'Y', 'yearly archives date format', 'communicamus' ) ) );
+		$title = sprintf( esc_html__( 'Year: %s', 'communicamus' ), get_the_date( esc_html_x( 'Y', 'yearly archives date format', 'communicamus' ) ) );
 	} elseif ( is_month() ) {
-		$title = sprintf( __( 'Month: %s', 'communicamus' ), get_the_date( _x( 'F Y', 'monthly archives date format', 'communicamus' ) ) );
+		$title = sprintf( esc_html__( 'Month: %s', 'communicamus' ), get_the_date( esc_html_x( 'F Y', 'monthly archives date format', 'communicamus' ) ) );
 	} elseif ( is_day() ) {
-		$title = sprintf( __( 'Day: %s', 'communicamus' ), get_the_date( _x( 'F j, Y', 'daily archives date format', 'communicamus' ) ) );
+		$title = sprintf( esc_html__( 'Day: %s', 'communicamus' ), get_the_date( esc_html_x( 'F j, Y', 'daily archives date format', 'communicamus' ) ) );
 	} elseif ( is_tax( 'post_format' ) ) {
 		if ( is_tax( 'post_format', 'post-format-aside' ) ) {
-			$title = _x( 'Asides', 'post format archive title', 'communicamus' );
+			$title = esc_html_x( 'Asides', 'post format archive title', 'communicamus' );
 		} elseif ( is_tax( 'post_format', 'post-format-gallery' ) ) {
-			$title = _x( 'Galleries', 'post format archive title', 'communicamus' );
+			$title = esc_html_x( 'Galleries', 'post format archive title', 'communicamus' );
 		} elseif ( is_tax( 'post_format', 'post-format-image' ) ) {
-			$title = _x( 'Images', 'post format archive title', 'communicamus' );
+			$title = esc_html_x( 'Images', 'post format archive title', 'communicamus' );
 		} elseif ( is_tax( 'post_format', 'post-format-video' ) ) {
-			$title = _x( 'Videos', 'post format archive title', 'communicamus' );
+			$title = esc_html_x( 'Videos', 'post format archive title', 'communicamus' );
 		} elseif ( is_tax( 'post_format', 'post-format-quote' ) ) {
-			$title = _x( 'Quotes', 'post format archive title', 'communicamus' );
+			$title = esc_html_x( 'Quotes', 'post format archive title', 'communicamus' );
 		} elseif ( is_tax( 'post_format', 'post-format-link' ) ) {
-			$title = _x( 'Links', 'post format archive title', 'communicamus' );
+			$title = esc_html_x( 'Links', 'post format archive title', 'communicamus' );
 		} elseif ( is_tax( 'post_format', 'post-format-status' ) ) {
-			$title = _x( 'Statuses', 'post format archive title', 'communicamus' );
+			$title = esc_html_x( 'Statuses', 'post format archive title', 'communicamus' );
 		} elseif ( is_tax( 'post_format', 'post-format-audio' ) ) {
-			$title = _x( 'Audio', 'post format archive title', 'communicamus' );
+			$title = esc_html_x( 'Audio', 'post format archive title', 'communicamus' );
 		} elseif ( is_tax( 'post_format', 'post-format-chat' ) ) {
-			$title = _x( 'Chats', 'post format archive title', 'communicamus' );
+			$title = esc_html_x( 'Chats', 'post format archive title', 'communicamus' );
 		}
 	} elseif ( is_post_type_archive() ) {
-		$title = sprintf( __( 'Archives: %s', 'communicamus' ), post_type_archive_title( '', false ) );
+		$title = sprintf( esc_html__( 'Archives: %s', 'communicamus' ), post_type_archive_title( '', false ) );
 	} elseif ( is_tax() ) {
 		$tax = get_taxonomy( get_queried_object()->taxonomy );
 		/* translators: 1: Taxonomy singular name, 2: Current taxonomy term */
-		$title = sprintf( __( '%1$s: %2$s', 'communicamus' ), $tax->labels->singular_name, single_term_title( '', false ) );
+		$title = sprintf( esc_html__( '%1$s: %2$s', 'communicamus' ), $tax->labels->singular_name, single_term_title( '', false ) );
 	} else {
-		$title = __( 'Archives', 'communicamus' );
+		$title = esc_html__( 'Archives', 'communicamus' );
 	}
 
 	/**
@@ -189,7 +189,7 @@ function the_archive_title( $before = '', $after = '' ) {
 	$title = apply_filters( 'get_the_archive_title', $title );
 
 	if ( ! empty( $title ) ) {
-		echo $before . $title . $after;
+		echo $before . $title . $after;  // WPCS: XSS OK.
 	}
 }
 endif;
@@ -216,7 +216,7 @@ function the_archive_description( $before = '', $after = '' ) {
 		 *
 		 * @param string $description Archive description to be displayed.
 		 */
-		echo $before . $description . $after;
+		echo $before . $description . $after;  // WPCS: XSS OK.
 	}
 }
 endif;
@@ -226,8 +226,8 @@ endif;
  *
  * @return bool
  */
-function _s_categorized_blog() {
-	if ( false === ( $all_the_cool_cats = get_transient( '_s_categories' ) ) ) {
+function communicamus_categorized_blog() {
+	if ( false === ( $all_the_cool_cats = get_transient( 'communicamus_categories' ) ) ) {
 		// Create an array of all the categories that are attached to posts.
 		$all_the_cool_cats = get_categories( array(
 			'fields'     => 'ids',
@@ -240,27 +240,27 @@ function _s_categorized_blog() {
 		// Count the number of categories that are attached to the posts.
 		$all_the_cool_cats = count( $all_the_cool_cats );
 
-		set_transient( '_s_categories', $all_the_cool_cats );
+		set_transient( 'communicamus_categories', $all_the_cool_cats );
 	}
 
 	if ( $all_the_cool_cats > 1 ) {
-		// This blog has more than 1 category so _s_categorized_blog should return true.
+		// This blog has more than 1 category so communicamus_categorized_blog should return true.
 		return true;
 	} else {
-		// This blog has only 1 category so _s_categorized_blog should return false.
+		// This blog has only 1 category so communicamus_categorized_blog should return false.
 		return false;
 	}
 }
 
 /**
- * Flush out the transients used in _s_categorized_blog.
+ * Flush out the transients used in communicamus_categorized_blog.
  */
-function _s_category_transient_flusher() {
+function communicamus_category_transient_flusher() {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return;
 	}
 	// Like, beat it. Dig?
-	delete_transient( '_s_categories' );
+	delete_transient( 'communicamus_categories' );
 }
-add_action( 'edit_category', '_s_category_transient_flusher' );
-add_action( 'save_post',     '_s_category_transient_flusher' );
+add_action( 'edit_category', 'communicamus_category_transient_flusher' );
+add_action( 'save_post',     'communicamus_category_transient_flusher' );

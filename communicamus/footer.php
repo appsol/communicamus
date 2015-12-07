@@ -6,6 +6,7 @@
  *
  * @package communicamus
  */
+
 ?>
 
 	</div><!-- #content -->
@@ -18,7 +19,7 @@
 <?php endif; ?>
 <?php if (has_nav_menu('footer-menu')): ?>
     <?php set_query_var('menu_location', 'footer-menu'); ?>
-    <?php get_template_part('partials/nav', 'footer'); ?>
+    <?php get_template_part('template-parts/nav', 'footer'); ?>
 <?php endif; ?>
 		<div class="site-info">
             <span class="copyright">All Content and Design &copy;<?php bloginfo('name'); ?> <?php echo date('Y'); ?> All Rights Reserved</span>

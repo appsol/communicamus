@@ -8,12 +8,17 @@
  * E.g., it puts together the home page when no home.php file exists.
  * Learn more: http://codex.wordpress.org/Template_Hierarchy
  *
- * @package _s
+ * @package communicamus
  */
 
 get_header(); ?>
 <div class="row">
-	<div id="primary" class="content-area">
+	<div id="primary" class="content-area primary">
+<?php if (is_active_sidebar('pre-content')): ?>
+	    <div class="widget-area pre-content">
+	    	<?php dynamic_sidebar('pre-content'); ?>
+	    </div><!-- .pre-content -->
+<?php endif; ?>
 		<main id="main" class="site-main" role="main">
 
 		<?php if ( have_posts() ) : ?>
@@ -22,11 +27,13 @@ get_header(); ?>
 			<?php while ( have_posts() ) : the_post(); ?>
 
 				<?php
-					/* Include the Post-Format-specific template for the content.
+
+					/*
+					 * Include the Post-Format-specific template for the content.
 					 * If you want to override this in a child theme, then include a file
 					 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
 					 */
-					get_template_part( 'content', get_post_format() );
+					get_template_part( 'template-parts/content', get_post_format() );
 				?>
 
 			<?php endwhile; ?>
@@ -35,11 +42,16 @@ get_header(); ?>
 
 		<?php else : ?>
 
-			<?php get_template_part( 'content', 'none' ); ?>
+			<?php get_template_part( 'template-parts/content', 'none' ); ?>
 
 		<?php endif; ?>
 
 		</main><!-- #main -->
+<?php if (is_active_sidebar('post-content')): ?>
+	    <div class="widget-area post-content">
+	    	<?php dynamic_sidebar('post-content'); ?>
+	    </div><!-- .post-content -->
+<?php endif; ?>
 	</div><!-- #primary -->
 
 <?php get_sidebar(); ?>

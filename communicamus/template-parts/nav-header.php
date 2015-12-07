@@ -20,7 +20,7 @@ $pre_menu = array('<div class="container">',
                 '<div class="navbar-collapse collapse" id="primary-menu">'
                 );
 
-$post_menu = array('</div>', '</div>');
+$post_menu = array('</div><!-- #primary-menu -->', '</div><!-- .container -->');
 
 $defaults = array(
     'theme_location'  => 'header-menu',

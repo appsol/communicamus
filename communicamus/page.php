@@ -7,12 +7,12 @@
  * and that other 'pages' on your WordPress site will use a
  * different template.
  *
- * @package _s
+ * @package communicamus
  */
 
 get_header(); ?>
-<div class="row">
-	<div id="primary" class="content-area">
+
+	<div id="primary" class="content-area primary">
 <?php if (is_active_sidebar('pre-content')): ?>
 	    <div class="widget-area pre-content">
 	    	<?php dynamic_sidebar('pre-content'); ?>
@@ -22,16 +22,16 @@ get_header(); ?>
 
 			<?php while ( have_posts() ) : the_post(); ?>
 
-				<?php get_template_part( 'content', 'page' ); ?>
+				<?php get_template_part( 'template-parts/content', 'page' ); ?>
 
 				<?php
-					// If comments are open or we have at least one comment, load up the comment template
+					// If comments are open or we have at least one comment, load up the comment template.
 					if ( comments_open() || get_comments_number() ) :
 						comments_template();
 					endif;
 				?>
 
-			<?php endwhile; // end of the loop. ?>
+			<?php endwhile; // End of the loop. ?>
 
 		</main><!-- #main -->
 <?php if (is_active_sidebar('post-content')): ?>
@@ -42,5 +42,4 @@ get_header(); ?>
 	</div><!-- #primary -->
 
 <?php get_sidebar(); ?>
-</div>
-<?php get_footer(); ?>
+<?php get_footer();

@@ -67,13 +67,15 @@ class Communicamus
 
     public function __construct()
     {
-        add_action( 'after_setup_theme', [$this, 'actionRegisterMenus'] );
-        add_action( 'after_setup_theme', [$this, 'actionAddThemeSupport'] );
-        add_action( 'after_setup_theme', [$this, 'actionLoadThemeTextDomain'] );
-	   	add_action( 'widgets_init', [$this, 'actionWidgetsInit']);
-	   	add_action( 'wp_enqueue_scripts', [$this, 'actionEnqueueAssets']);
-        add_filter( 'comments_open', [$this, 'filterDisablePageComments'], 10, 2);
-	   	add_filter( 'img_caption_shortcode', [$this, 'filterImgCaptionShortcode'], 10, 3);
+        add_action('after_setup_theme', [$this, 'actionRegisterMenus']);
+        add_action('after_setup_theme', [$this, 'actionAddThemeSupport']);
+        add_action('after_setup_theme', [$this, 'actionLoadThemeTextDomain']);
+        add_action('widgets_init', [$this, 'actionWidgetsInit']);
+        add_action('wp_enqueue_scripts', [$this, 'actionEnqueueAssets']);
+        add_filter('comments_open', [$this, 'filterDisablePageComments'], 10, 2);
+        add_filter('img_caption_shortcode', [$this, 'filterImgCaptionShortcode'], 10, 3);
+        add_filter('excerpt_length', [$this, 'filterExcerptLength']);
+        add_filter('excerpt_more', [$this, 'filterExcerptMore']);
     }
 
     /**
@@ -81,28 +83,33 @@ class Communicamus
 	 *
 	 * @link http://codex.wordpress.org/Function_Reference/register_sidebar
 	 */
-	public function actionWidgetsInit() {
-		register_sidebar( array(
-			'name'          => __( 'Sidebar', 'communicamus' ),
-			'id'            => 'sidebar-1',
-			'description'   => 'Main left or right side bar',
-			'before_widget' => '<aside id="%1$s" class="block widget %2$s">',
-			'after_widget'  => '</aside>',
-			'before_title'  => '<h3 class="widget-title">',
-			'after_title'   => '</h3>',
-		) );
+    public function actionWidgetsInit()
+    {
+        register_sidebar(
+            [
+                'name'          => __('Sidebar', 'communicamus'),
+                'id'            => 'sidebar-1',
+                'description'   => 'Main left or right side bar',
+                'before_widget' => '<aside id="%1$s" class="block widget %2$s">',
+                'after_widget'  => '</aside>',
+                'before_title'  => '<h3 class="widget-title">',
+                'after_title'   => '</h3>',
+            ]
+        );
 
         // Register the location sidebars
         foreach ($this->widget_locations as $location) {
-            register_sidebar(array(
-                'name' => $location['name'],
-                'id' => $location['id'],
-                'description' => $location['description'],
-                'before_widget' => '<div id="%1$s" class="widget %2$s">',
-                'after_widget' => "\n</div>\n",
-                'before_title' => "<h3 class=\"hd\">",
-                'after_title' => "</h3>\n",
-            ));
+            register_sidebar(
+                [
+                    'name' => __($location['name'],'communicamus'),
+                    'id' => $location['id'],
+                    'description' => $location['description'],
+                    'before_widget' => '<div id="%1$s" class="widget %2$s">',
+                    'after_widget' => "\n</div>\n",
+                    'before_title' => "<h3 class=\"hd widget-title\">",
+                    'after_title' => "</h3>\n",
+                ]
+            );
         }
     }
 
@@ -144,31 +151,62 @@ class Communicamus
      **/
     public function actionAddThemeSupport()
     {
-    	// Add default posts and comments RSS feed links to head.
-		add_theme_support( 'automatic-feed-links' );
+        // Add default posts and comments RSS feed links to head.
+        add_theme_support('automatic-feed-links');
 
-		/*
-		 * Enable support for Post Thumbnails on posts and pages.
-		 *
-		 * @link http://codex.wordpress.org/Function_Reference/add_theme_support#Post_Thumbnails
-		 */
-		add_theme_support( 'post-thumbnails' );
+        /*
+         * Let WordPress manage the document title.
+         * By adding theme support, we declare that this theme does not use a
+         * hard-coded <title> tag in the document head, and expect WordPress to
+         * provide it for us.
+         */
+        add_theme_support('title-tag');
 
-		/*
-		 * Switch default core markup for search form, comment form, and comments
-		 * to output valid HTML5.
-		 */
-		add_theme_support( 'html5', array(
-			'search-form', 'comment-form', 'comment-list', 'gallery', 'caption',
-		) );
+        /*
+         * Enable support for Post Thumbnails on posts and pages.
+         *
+         * @link http://codex.wordpress.org/Function_Reference/add_theme_support#Post_Thumbnails
+         */
+        add_theme_support('post-thumbnails');
 
-		/*
-		 * Enable support for Post Formats.
-		 * See http://codex.wordpress.org/Post_Formats
-		 */
-		add_theme_support( 'post-formats', array(
-			'aside', 'image', 'video', 'quote', 'link',
-		) );
+        /*
+         * Switch default core markup for search form, comment form, and comments
+         * to output valid HTML5.
+         */
+        add_theme_support(
+            'html5',
+            [
+                'search-form',
+                'comment-form',
+                'comment-list',
+                'gallery',
+                'caption'
+            ]
+        );
+
+        /*
+         * Enable support for Post Formats.
+         * See http://codex.wordpress.org/Post_Formats
+         */
+        add_theme_support(
+            'post-formats',
+            [
+                'aside',
+                'image',
+                'video',
+                'quote',
+                'link'
+            ]
+        );
+
+        // Set up the WordPress core custom background feature.
+        add_theme_support(
+            'custom-background',
+            apply_filters('communicamus_custom_background_args', [
+                'default-color' => 'ffffff',
+                'default-image' => '',
+            ])
+        );
     }
 
     /**
@@ -179,12 +217,12 @@ class Communicamus
      **/
     public function actionEnqueueAssets()
     {
-    	if ($style_uri = $this->getThemeFileUri('/dist/css/style.css')) {
+    	if ($style_uri = $this->getThemeFileUri('dist/css/style.css')) {
             wp_register_style('communicamus', $style_uri);
             wp_enqueue_style('communicamus');
         }
 
-        if ($js_uri = $this->getThemeFileUri('/dist/js/script.js')) {
+        if ($js_uri = $this->getThemeFileUri('dist/js/script.js')) {
             wp_enqueue_script('communicamus', $js_uri, null, '', true);
             $context = array(
             	'themeRoot' => is_child_theme() ?
@@ -244,13 +282,18 @@ class Communicamus
      **/
     public function getThemeFileUri($filename)
     {
-        if (file_exists(get_stylesheet_directory() . '/' . $filename)) {
-            return get_stylesheet_directory_uri() . '/' . $filename;
+        $fileUri = false;
+        $minFilename = implode('.min.', explode('.', $filename));
+        if (file_exists(get_stylesheet_directory() . '/' . $minFilename)) {
+            $fileUri = get_stylesheet_directory_uri() . '/' . $minFilename;
+        } elseif (file_exists(get_stylesheet_directory() . '/' . $filename)) {
+            $fileUri = get_stylesheet_directory_uri() . '/' . $filename;
+        } elseif (file_exists(get_template_directory() . '/' . $minFilename)) {
+            $fileUri = get_template_directory_uri() . '/' . $minFilename;
+        } elseif (file_exists(get_template_directory() . '/' . $filename)) {
+            $fileUri = get_template_directory_uri() . '/' . $filename;
         }
-        if (file_exists(get_template_directory() . '/' . $filename)) {
-            return get_template_directory_uri() . '/' . $filename;
-        }
-        return false;
+        return $fileUri;
     }
 
     /**
@@ -261,7 +304,7 @@ class Communicamus
      * @param string $output  The caption output. Default empty.
      * @param array  $attr    Attributes of the caption shortcode.
      * @param string $content The image element, possibly wrapped in a hyperlink.
-     * @return void
+     * @return string
      * @author Stuart Laverick
      **/
     public function filterImgCaptionShortcode($output, $attr, $content)
@@ -302,6 +345,32 @@ class Communicamus
         return '<div ' . $atts['id'] . $style . 'class="' . esc_attr( $class ) . '">'
         . do_shortcode( $content ) . '<p class="wp-caption-text">' . $atts['caption'] . '</p></div>';
     }
+
+    /**
+     * Filter to alter the default excerpt length
+     *
+     * @return int the new excerpt length
+     * @author Stuart Laverick
+     **/
+    public function filterExcerptLength($length)
+    {
+        return 35;
+    }
+
+    /**
+     * Filter to replace the standard 'more' elipses
+     *
+     * @return string the replacement 'more' text
+     * @author Stuart Laverick
+     **/
+    public function filterExcerptMore($more)
+    {
+        return sprintf(
+            __('<a class="read-more" href="%s">Continue reading %s <span class="meta-nav">&hellip;</span></a>', 'communicamus'),
+            get_permalink(get_the_ID()),
+            the_title('<span class="screen-reader-text">"', '"</span>', false)
+        );
+    }
 }
 
 // Instantiate the theme object as early as possible
@@ -323,6 +392,11 @@ require get_template_directory() . '/inc/template-tags.php';
 require get_template_directory() . '/inc/extras.php';
 
 /**
+ * Custom functions not inherited from _s.
+ */
+require get_template_directory() . '/inc/helpers.php';
+
+/**
  * Customizer additions.
  */
 // require get_template_directory() . '/inc/customizer.php';
@@ -335,4 +409,9 @@ require get_template_directory() . '/inc/extras.php';
 /**
  * Load menu walker class for Bootstrap 3 Navbar menu
  */
-// require get_template_directory() . '/inc/bootstrap3navbar.php';
+// require get_template_directory() . '/inc/wp_bootstrap_navwalker.php';
+
+/**
+ * Load the Picturefill.js featured image functionality
+ */
+require get_template_directory() . '/inc/picturefill-featured-image.php';
