@@ -5,13 +5,18 @@
  * @return Array the image sizes
  * @author Stuart Laverick
  **/
-function getTheFeaturedImages(&$alt)
+function getTheFeaturedImages(&$alt, $postId)
 {
-    $post = get_queried_object();
-    $images = [];
-    $imageId = get_post_thumbnail_id($post->ID);
-    if (!$imageId && isset($post->post_parent)) {
-        $parent = get_post($post->post_parent);
+    if ($postId) {
+        $thePost = get_post($postId);
+    } else {
+        $thePost = get_queried_object();
+    }
+
+    $images = array();
+    $imageId = get_post_thumbnail_id($thePost->ID);
+    if (!$imageId && isset($thePost->post_parent)) {
+        $parent = get_post($thePost->post_parent);
         $imageId = get_post_thumbnail_id($parent->ID);
     }
     if ($imageId) {
@@ -19,15 +24,15 @@ function getTheFeaturedImages(&$alt)
         $imageSizes = communicamus_get_thumbnail_sizes();
         foreach ($imageSizes as $key => $value) {
             $images[$key] = array_merge(
-                [wp_get_attachment_image_src($imageId, $key)],
+                array(wp_get_attachment_image_src($imageId, $key)),
                 $value
             );
         }
         // Add the full size image to the array
         $fullImage = wp_get_attachment_image_src($imageId, 'full');
         $images['full'] = array_merge(
-            [$fullImage],
-            [1600, 1280]
+            array($fullImage),
+            array($fullImage[1], $fullImage[2])
         );
         uasort($images, function($a, $b){
             if ($a[0][1] == $b[0][1]) {
@@ -46,10 +51,10 @@ function getTheFeaturedImages(&$alt)
  * @return void
  * @author Stuart Laverick
  **/
-function printPictureFillFeaturedImage()
+function printPictureFillFeaturedImage($postId=null)
 {
     $alt = '';
-    $images = getTheFeaturedImages($alt);
+    $images = getTheFeaturedImages($alt, $postId);
     if (count($images['medium'])):
     ?>
     <div id="featuredimage" class="header-image">
@@ -58,6 +63,7 @@ function printPictureFillFeaturedImage()
     <?php foreach ($images as $key => $value): ?>
             <source srcset="<?php print $value[0][0]; ?>" media="(max-width: <?php print $value[1]; ?>px)">
     <?php endforeach; ?>
+            <source srcset="<?php print $value[0][0]; ?>">
             <!--[if IE 9]></video><![endif]-->
             <img srcset="<?php print $images['medium'][0][0]; ?>" alt="<?php print $alt; ?>">
         </picture>

@@ -72,7 +72,7 @@ if ( ! function_exists( 'communicamus_posted_on' ) ) :
 function communicamus_posted_on() {
 	$time_string = '<time class="entry-date published updated" datetime="%1$s">%2$s</time>';
 	if ( get_the_time( 'U' ) !== get_the_modified_time( 'U' ) ) {
-		$time_string = '<time class="entry-date published" datetime="%1$s">%2$s</time><time class="updated" datetime="%3$s">%4$s</time>';
+		$time_string = '<time class="entry-date published" datetime="%1$s">%2$s</time> (' . __('updated', 'communicamus') . ':<time class="updated" datetime="%3$s">%4$s</time>)';
 	}
 
 	$time_string = sprintf( $time_string,
@@ -113,7 +113,7 @@ function communicamus_entry_footer() {
 		/* translators: used between list items, there is a space after the comma */
 		$tags_list = get_the_tag_list( '', esc_html__( ', ', 'communicamus' ) );
 		if ( $tags_list ) {
-			printf( '<span class="tags-links">' . esc_html__( 'Tagged %1$s', 'communicamus' ) . '</span>', $tags_list ); // WPCS: XSS OK.
+			printf( '<span class="tags-links"> ' . esc_html__( 'Tagged %1$s', 'communicamus' ) . '</span>', $tags_list ); // WPCS: XSS OK.
 		}
 	}
 

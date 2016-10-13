@@ -12,7 +12,6 @@
  */
 
 get_header(); ?>
-<div class="row">
 	<div id="primary" class="content-area primary">
 <?php if (is_active_sidebar('pre-content')): ?>
 	    <div class="widget-area pre-content">
@@ -55,5 +54,4 @@ get_header(); ?>
 	</div><!-- #primary -->
 
 <?php get_sidebar(); ?>
-</div>
 <?php get_footer(); ?>

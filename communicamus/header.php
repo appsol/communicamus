@@ -54,4 +54,4 @@
 <?php endif; ?>
 	</header><!-- #masthead -->
 
-	<div id="content" class="site-content">
+	<div id="content" class="site-content<?php communicamus_the_featured_image_class(); ?>">

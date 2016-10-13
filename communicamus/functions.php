@@ -67,15 +67,15 @@ class Communicamus
 
     public function __construct()
     {
-        add_action('after_setup_theme', [$this, 'actionRegisterMenus']);
-        add_action('after_setup_theme', [$this, 'actionAddThemeSupport']);
-        add_action('after_setup_theme', [$this, 'actionLoadThemeTextDomain']);
-        add_action('widgets_init', [$this, 'actionWidgetsInit']);
-        add_action('wp_enqueue_scripts', [$this, 'actionEnqueueAssets']);
-        add_filter('comments_open', [$this, 'filterDisablePageComments'], 10, 2);
-        add_filter('img_caption_shortcode', [$this, 'filterImgCaptionShortcode'], 10, 3);
-        add_filter('excerpt_length', [$this, 'filterExcerptLength']);
-        add_filter('excerpt_more', [$this, 'filterExcerptMore']);
+        add_action('after_setup_theme', array($this, 'actionRegisterMenus'));
+        add_action('after_setup_theme', array($this, 'actionAddThemeSupport'));
+        add_action('after_setup_theme', array($this, 'actionLoadThemeTextDomain'));
+        add_action('widgets_init', array($this, 'actionWidgetsInit'));
+        add_action('wp_enqueue_scripts', array($this, 'actionEnqueueAssets'));
+        add_filter('comments_open', array($this, 'filterDisablePageComments'), 10, 2);
+        add_filter('img_caption_shortcode', array($this, 'filterImgCaptionShortcode'), 10, 3);
+        add_filter('excerpt_length', array($this, 'filterExcerptLength'));
+        add_filter('excerpt_more', array($this, 'filterExcerptMore'));
     }
 
     /**
@@ -86,21 +86,21 @@ class Communicamus
     public function actionWidgetsInit()
     {
         register_sidebar(
-            [
+            array(
                 'name'          => __('Sidebar', 'communicamus'),
                 'id'            => 'sidebar-1',
                 'description'   => 'Main left or right side bar',
-                'before_widget' => '<aside id="%1$s" class="block widget %2$s">',
+                'before_widget' => '<aside id="%1$s" class="widget %2$s">',
                 'after_widget'  => '</aside>',
                 'before_title'  => '<h3 class="widget-title">',
                 'after_title'   => '</h3>',
-            ]
+            )
         );
 
         // Register the location sidebars
         foreach ($this->widget_locations as $location) {
             register_sidebar(
-                [
+                array(
                     'name' => __($location['name'],'communicamus'),
                     'id' => $location['id'],
                     'description' => $location['description'],
@@ -108,7 +108,7 @@ class Communicamus
                     'after_widget' => "\n</div>\n",
                     'before_title' => "<h3 class=\"hd widget-title\">",
                     'after_title' => "</h3>\n",
-                ]
+                )
             );
         }
     }
@@ -175,13 +175,13 @@ class Communicamus
          */
         add_theme_support(
             'html5',
-            [
+            array(
                 'search-form',
                 'comment-form',
                 'comment-list',
                 'gallery',
                 'caption'
-            ]
+            )
         );
 
         /*
@@ -190,22 +190,22 @@ class Communicamus
          */
         add_theme_support(
             'post-formats',
-            [
+            array(
                 'aside',
                 'image',
                 'video',
                 'quote',
                 'link'
-            ]
+            )
         );
 
         // Set up the WordPress core custom background feature.
         add_theme_support(
             'custom-background',
-            apply_filters('communicamus_custom_background_args', [
+            apply_filters('communicamus_custom_background_args', array(
                 'default-color' => 'ffffff',
                 'default-image' => '',
-            ])
+            ))
         );
     }
 
@@ -366,7 +366,7 @@ class Communicamus
     public function filterExcerptMore($more)
     {
         return sprintf(
-            __('<a class="read-more" href="%s">Continue reading %s <span class="meta-nav">&hellip;</span></a>', 'communicamus'),
+            __(' <a class="read-more" href="%s">Continue reading %s <span class="meta-nav">&hellip;</span></a>', 'communicamus'),
             get_permalink(get_the_ID()),
             the_title('<span class="screen-reader-text">"', '"</span>', false)
         );
@@ -414,4 +414,4 @@ require get_template_directory() . '/inc/helpers.php';
 /**
  * Load the Picturefill.js featured image functionality
  */
-require get_template_directory() . '/inc/picturefill-featured-image.php';
+// require get_template_directory() . '/inc/picturefill-featured-image.php';
